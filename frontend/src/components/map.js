@@ -6,7 +6,7 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
   const [mapError, setMapError] = useState(null);
   const plotRef = useRef(null);
   
-  // Store map view state
+  // stores the current map view 
   const [mapView, setMapView] = useState({
     center: {
       lon: data.missions[0]?.coordinates[0]?.[0],
@@ -15,19 +15,21 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
     zoom: 14
   });
 
-  // Track if this is the initial render
+  // we track if its the initial render
   const isInitialRender = useRef(true);
   
-  // Track user interaction to prevent animation from overriding
+  // track user input to prevent animation from overriding
   const userInteracting = useRef(false);
   const interactionTimeout = useRef(null);
 
   const mapboxToken = process.env.REACT_APP_MAPBOX_TOKEN;
   
+  // if we are animating we get the mission data
   const animatingMissionData = animatingMission 
     ? data.missions.find(m => m.id === animatingMission)
     : null;
   
+  // creates our percentage for progress bar
   const animationPercentage = animatingMissionData && animationProgress > 0
     ? Math.round((animationProgress / (animatingMissionData.coordinates.length - 1)) * 100)
     : 0;
@@ -38,16 +40,20 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
     }
     
     return () => {
-      // Clean up interaction timeout
+      // cleans up webgl contexts
       if (interactionTimeout.current) {
         clearTimeout(interactionTimeout.current);
       }
       
+      // checks if the plotly reference exists
       if (plotRef.current && plotRef.current.el) {
         try {
+          // since it does we can get the canvas element
           const canvas = plotRef.current.el.querySelector('canvas');
           if (canvas) {
+            // if the canvas exists we get the webgl context falls back to experimental webgl
             const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            // lose context to free resources
             if (gl && gl.getExtension('WEBGL_lose_context')) {
               gl.getExtension('WEBGL_lose_context').loseContext();
             }
@@ -57,7 +63,7 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
         }
       }
     };
-  }, [mapboxToken]);
+  }, [mapboxToken]); 
 
   if (mapError) {
     return (
@@ -75,9 +81,9 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-900">Mission Routes Map</h3>
-      
-      {/* Animation Info Overlay */}
+      <h3 className="text-lg font-semibold mb-4 text-gray-900">Mission Map</h3>
+
+      {/* Animation info */}
       {animatingMissionData && (
         <div className="mb-4 bg-white border border-gray-300 rounded-lg p-4 shadow">
           <div className="flex items-center justify-between mb-2">
@@ -90,7 +96,7 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
               {animationPercentage}% Complete
             </span>
           </div>
-          
+
           {/* Progress Bar */}
           <div className="w-full bg-gray-200 rounded h-2 overflow-hidden">
             <div 
@@ -130,7 +136,7 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
             },
             hovermode: 'closest',
             autosize: true,
-            uirevision: 'true' // Preserve UI state (zoom/pan) across updates
+            uirevision: 'true' // this preserves user changes like zoom/pan on updates
           }}
           config={{
             responsive: true,
@@ -153,20 +159,20 @@ export default function MissionMap({ data, selectedMissions, showAllWaypoints, a
             }
           }}
           onUpdate={(figure) => {
-            // Mark that user is interacting
+            // this indicates a user interacting with the map
             userInteracting.current = true;
             
-            // Clear any existing timeout
+            // clears any timeout that were set
             if (interactionTimeout.current) {
               clearTimeout(interactionTimeout.current);
             }
             
-            // Reset user interaction flag after 500ms of no updates
+            // resets after 100000ms of inactivity
             interactionTimeout.current = setTimeout(() => {
               userInteracting.current = false;
-            }, 500);
+            }, 100000);
             
-            // Update our state when user zooms/pans (but not on initial render)
+            // update our state when user zooms/pans (but not on initial render)
             if (!isInitialRender.current && figure.layout.mapbox) {
               setMapView({
                 center: figure.layout.mapbox.center,

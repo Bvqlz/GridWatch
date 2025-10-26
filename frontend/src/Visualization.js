@@ -16,17 +16,19 @@ export default function DroneVisualization() {
   const [selectedMissions, setSelectedMissions] = useState([]);
   const [showAllWaypoints, setShowAllWaypoints] = useState(false);
 
+  // states for our animations
   const [animatingMission, setAnimatingMission] = useState(null);
   const [animationProgress, setAnimationProgress] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  //we load the data when page loads
+  // we load the data when page loads
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
     try {
+      //mission data is from the api the large json that was restructured 
       const missionData = await api.fetchMissionData();
       setData(missionData);
       setSelectedMissions(missionData.missions.map(m => m.id)); //map over each mission in the array. 

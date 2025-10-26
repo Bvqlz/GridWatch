@@ -6,11 +6,12 @@ export const api = {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/mission-data`);
       if (!response.ok) throw new Error('Failed to fetch mission data');
       const rawData = await response.json();
-      
-      // Now we have clean separation: missionPaths, assetPoints, photoPoints, polygonBoundary
+
+      // data from backend is destructured here
       const { missionPaths, assetPoints, photoPoints, polygonBoundary } = rawData;
-      
-      // Transform to frontend format
+
+      // data is then restructured to include only necessary data for frontend
+      // various default fallbacks in case the data gets corrupted
       return {
         missions: missionPaths.missions.map(m => ({
           id: m.mission_id,
@@ -37,18 +38,5 @@ export const api = {
     }
   },
 
-  async optimizeRoutes(params = {}) {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/optimize`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params)
-      });
-      if (!response.ok) throw new Error('Optimization failed');
-      return await response.json();
-    } catch (error) {
-      console.error('API Error:', error);
-      throw error;
-    }
-  }
+  
 };

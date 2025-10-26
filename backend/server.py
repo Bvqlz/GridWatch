@@ -32,10 +32,8 @@ def get_polygon_boundary():
     with open(OUTPUT_DIR / 'polygon_boundary.json', 'r') as file:
         return jsonify(json.load(file))
 
-# Keep a combined endpoint if needed
 @app.route('/mission-data')
 def get_all_mission_data():
-    """Returns all data in separate keys to avoid merge conflicts"""
     with open(OUTPUT_DIR / 'mission_paths.json', 'r') as file:
         mission_paths = json.load(file)
     with open(OUTPUT_DIR / 'asset_points.json', 'r') as file:
