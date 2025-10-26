@@ -7,11 +7,6 @@ export default function Header() {
             <h1 className="text-3xl font-bold mb-2">GridWatch</h1>
             <p className="text-[#A7B6B5]">NextEra's Drone Optimizer</p>
           </div>
-          <img 
-            src="/NextEra_Logo.png" 
-            alt="NextEra Logo" 
-            className="h-20 w-auto object-contain opacity-90 -my-2"
-          />
         </div>
       </div>
     </div>

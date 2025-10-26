@@ -8,7 +8,7 @@ GridWatch consists of two main components:
 - **Backend**: Python-based route optimizer using Google OR-Tools
 - **Frontend**: React-based interactive visualization dashboard
 
-The system optimizes flight paths across 11 drone missions, covering approximately 3,250 waypoints over 117.51 km while respecting battery constraints and flight boundaries.
+The system optimizes flight paths across 11 drone missions, covering approximately 2,817 waypoints and over 300k+ feet while respecting battery constraints and flight boundaries.
 
 ## Prerequisites
 
@@ -232,8 +232,4 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ## License
 
-This project is proprietary to NextEra Energy.
-
-## Support
-
-For issues or questions, please contact the development team or refer to the inline code documentation.
+This project tackles the NextEra Energy Drone Challenge
