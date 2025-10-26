@@ -5,3 +5,5 @@ pandas
 shapely
 ortools
 matplotlib
+flask
+flask_cors
