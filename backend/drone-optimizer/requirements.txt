@@ -1,0 +1,7 @@
+geopandas
+dill
+numpy
+pandas
+shapely
+ortools
+matplotlib
